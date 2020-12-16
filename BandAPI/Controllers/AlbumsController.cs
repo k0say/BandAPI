@@ -21,7 +21,7 @@ namespace BandAPI.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-
+        public IActionResult
 
     }
 }
