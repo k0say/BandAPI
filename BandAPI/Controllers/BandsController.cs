@@ -32,7 +32,7 @@ namespace BandAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<BandDto>>(bandsFromRepo));
         }
         
-        [HttpGet("{bandId}")]
+        [HttpGet("{bandId}", Name="GetBand")]
         public IActionResult GetBand(Guid bandId)
         {
             var bandFromRepo = _bandAlbumRepository.GetBand(bandId);
@@ -40,6 +40,19 @@ namespace BandAPI.Controllers
                 return NotFound();
 
             return Ok(bandFromRepo);
+        }
+
+        [HttpPost]
+        public ActionResult<BandDto> CreateBand([FromBody] BandForCreatingDto band) //FromBody quando è tipo complesso
+        {
+            //ritorna BadRequest se è null
+            var bandEntity = _mapper.Map<Entities.Band>(band);
+            _bandAlbumRepository.AddBand(bandEntity);
+            _bandAlbumRepository.Save();
+
+            var bandToReturn = _mapper.Map<BandDto>(bandEntity);
+
+            return CreatedAtRoute("GetBand", new { bandId = bandToReturn.Id }, bandToReturn);
         }
 
     }

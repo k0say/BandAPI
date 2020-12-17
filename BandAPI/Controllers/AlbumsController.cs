@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BandAPI.Controllers
 {
     [ApiController]
-    [Route("api/bands/")]
+    [Route("api/bands/{bandId}/albums")]
     public class AlbumsController : ControllerBase
     {
         private readonly IBandAlbumRepository _bandAlbumRepository;
@@ -22,7 +22,7 @@ namespace BandAPI.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet("{bandId}/albums")]
+        [HttpGet]
         public ActionResult<IEnumerable<AlbumsDto>> GetAlbumsForBand(Guid bandId)
         {
             if (!_bandAlbumRepository.BandExists(bandId))
@@ -32,7 +32,7 @@ namespace BandAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<AlbumsDto>>(albumsFromRepo));
         }
 
-        [HttpGet("{albumId}")]
+        [HttpGet("{albumId}", Name="GetAlbumForBand")]
         public ActionResult<AlbumsDto> GetAlbumForBand(Guid bandId, Guid albumId)
         {
             if (!_bandAlbumRepository.BandExists(bandId))
@@ -49,8 +49,27 @@ namespace BandAPI.Controllers
             return Ok(_mapper.Map<AlbumsDto>(albumFromRepo));
         }
 
+        [HttpPost]
+        public ActionResult<AlbumsDto> CreateAlbumForBand(Guid bandId, [FromBody] AlbumForCreatingDto album)
+        {
+            if (!_bandAlbumRepository.BandExists(bandId))
+            {
+                return NotFound();
+            }
 
-        [HttpGet("album/tutti")]
+            var albumEntity = _mapper.Map<Entities.Album>(album);
+            _bandAlbumRepository.AddAlbum(bandId, albumEntity);
+            _bandAlbumRepository.Save();
+
+            var albumToReturn = _mapper.Map<AlbumsDto>(albumEntity);
+            return CreatedAtRoute("GetAlbumForBand", new { bandId = bandId, albumId = albumToReturn.Id}, albumToReturn);
+        }
+
+
+
+
+
+        [HttpGet("api/bands/allalbums")]
         public ActionResult<IEnumerable<AlbumsDto>> GetAll()
         {
             var all = _bandAlbumRepository.GetAllAlbums();
