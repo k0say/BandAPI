@@ -26,9 +26,9 @@ namespace BandAPI.Controllers
         [HttpGet]
         //HEAD -> come get ma non ritorna un response body (utiler per sapere se una risposta è stata modifica, o valida)
         [HttpHead]
-        public ActionResult<IEnumerable<BandDto>> GetBands([FromQuery]string mainGenre, [FromQuery] string searchQuery)
+        public ActionResult<IEnumerable<BandDto>> GetBands([FromQuery] BandsResourceParameters bandsResourceParameters)
         {
-            var bandsFromRepo = _bandAlbumRepository.GetBands(mainGenre, searchQuery);
+            var bandsFromRepo = _bandAlbumRepository.GetBands(bandsResourceParameters);
             return Ok(_mapper.Map<IEnumerable<BandDto>>(bandsFromRepo));
         }
         
