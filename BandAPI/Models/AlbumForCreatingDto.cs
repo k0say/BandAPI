@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BandAPI.ValidationAttributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace BandAPI.Models
 {
-    public class AlbumForCreatingDto : IValidatableObject
+    [TitleAndDescriptionAttribute]
+    public class AlbumForCreatingDto //: IValidatableObject
     {
         [Required]
         [MaxLength(200)]
@@ -14,12 +16,13 @@ namespace BandAPI.Models
         [MaxLength(400)]
         public string Description { get; set; }
 
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (Title.Equals(Description))
-            {
-                yield return new ValidationResult("The title and description must be different!", new[] {"AlbumForCreatingDto"});
-            }
-        }
+        // validation in classe
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    if (Title.Equals(Description))
+        //    {
+        //        yield return new ValidationResult("The title and description must be different!", new[] {"AlbumForCreatingDto"});
+        //    }
+        //}
     }
 }
