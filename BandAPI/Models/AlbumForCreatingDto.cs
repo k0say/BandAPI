@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace BandAPI.Models
 {
-    [TitleAndDescriptionAttribute]
+    //Custom Attribute svilppato in TitleAndDescriptionAttribute
+    [TitleAndDescription]
     public class AlbumForCreatingDto //: IValidatableObject
     {
         [Required]
