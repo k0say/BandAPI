@@ -21,10 +21,5 @@ namespace BandAPI.Entities
         [ForeignKey("BandId")]
         public Band Band { get; set; }
         public Guid BandId { get; set; }
-        //public static Faker<Album> FakerData { get; } =
-        //new Faker<Album>()
-        //            .RuleFor(p => p.Id, f => Guid.NewGuid())
-        //            .RuleFor(p => p.Title, f => f.Name.FirstName())
-        //            .RuleFor(p => p.Description, f => f.Name.JobDescriptor());
     }
 }
