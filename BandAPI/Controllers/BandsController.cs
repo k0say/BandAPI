@@ -23,10 +23,12 @@ namespace BandAPI.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         
-        public ActionResult<IEnumerable<BandDto>> GetBands()
+        [HttpGet]
+        //HEAD -> come get ma non ritorna un response body (utiler per sapere se una risposta è stata modifica, o valida)
+        [HttpHead]
+        public ActionResult<IEnumerable<BandDto>> GetBands([FromQuery]string mainGenre, [FromQuery] string searchQuery)
         {
-            var bandsFromRepo = _bandAlbumRepository.GetBands();
-
+            var bandsFromRepo = _bandAlbumRepository.GetBands(mainGenre, searchQuery);
             return Ok(_mapper.Map<IEnumerable<BandDto>>(bandsFromRepo));
         }
         
