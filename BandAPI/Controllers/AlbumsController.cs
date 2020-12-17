@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BandAPI.Controllers
 {
     [ApiController]
-    [Route("api/bands/{bandId}/albums")]
+    [Route("api/bands/")]
     public class AlbumsController : ControllerBase
     {
         private readonly IBandAlbumRepository _bandAlbumRepository;
@@ -22,7 +22,7 @@ namespace BandAPI.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        [HttpGet]
+        [HttpGet("{bandId}/albums")]
         public ActionResult<IEnumerable<AlbumsDto>> GetAlbumsForBand(Guid bandId)
         {
             if (!_bandAlbumRepository.BandExists(bandId))
@@ -30,6 +30,31 @@ namespace BandAPI.Controllers
 
             var albumsFromRepo = _bandAlbumRepository.GetAlbums(bandId);
             return Ok(_mapper.Map<IEnumerable<AlbumsDto>>(albumsFromRepo));
+        }
+
+        [HttpGet("{albumId}")]
+        public ActionResult<AlbumsDto> GetAlbumForBand(Guid bandId, Guid albumId)
+        {
+            if (!_bandAlbumRepository.BandExists(bandId))
+                return NotFound();
+
+            if (!_bandAlbumRepository.AlbumExists(albumId))
+                return NotFound();
+
+            var albumFromRepo = _bandAlbumRepository.GetAlbum(bandId, albumId);
+            
+            if (albumFromRepo == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<AlbumsDto>(albumFromRepo));
+        }
+
+
+        [HttpGet("album/tutti")]
+        public ActionResult<IEnumerable<AlbumsDto>> GetAll()
+        {
+            var all = _bandAlbumRepository.GetAllAlbums();
+            return Ok(_mapper.Map<IEnumerable<AlbumsDto>>(all));
         }
 
     }

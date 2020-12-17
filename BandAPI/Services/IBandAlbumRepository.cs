@@ -8,6 +8,7 @@ namespace BandAPI.Services
 {
     public interface IBandAlbumRepository
     {
+        IEnumerable<Album> GetAllAlbums();
         IEnumerable<Album> GetAlbums(Guid bandId);
         Album GetAlbum(Guid bandId, Guid albumId);
         void AddAlbum(Guid bandId, Album album);

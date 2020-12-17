@@ -50,7 +50,7 @@ namespace BandAPI.Services
             if (bandId == Guid.Empty)
                 throw new ArgumentNullException(nameof(bandId));
 
-            return _context.Albums.Any(b => b.Id == bandId);
+            return _context.Bands.Any(b => b.Id == bandId);
         }
 
         public void DeleteAlbum(Album album)
@@ -93,6 +93,11 @@ namespace BandAPI.Services
                 .Where(b => b.BandId == bandId)
                 .OrderBy(a => a.Title)
                 .ToList();
+        }
+
+        public IEnumerable<Album> GetAllAlbums()
+        {
+            return _context.Albums.ToList();
         }
 
         public Band GetBand(Guid bandId)
