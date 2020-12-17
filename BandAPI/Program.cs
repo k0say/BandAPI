@@ -22,11 +22,11 @@ namespace BandAPI
             {
                 try
                 {
-                    var context = scope.ServiceProvider.GetService<BandAlbumContext>();
-                    //cancelliamo il db ogni volta
-                    context.Database.EnsureDeleted();
-                    //ricreiamo ogni volta il db
-                    context.Database.Migrate();
+                    //var context = scope.ServiceProvider.GetService<BandAlbumContext>();
+                    ////cancelliamo il db ogni volta
+                    //context.Database.EnsureDeleted();
+                    ////ricreiamo ogni volta il db
+                    //context.Database.Migrate();
                 }
                 catch(Exception ex)
                 {

@@ -69,7 +69,7 @@ namespace BandAPI.Controllers
 
 
 
-        [HttpGet("api/bands/allalbums")]
+        [HttpGet("allalbums")]
         public ActionResult<IEnumerable<AlbumsDto>> GetAll()
         {
             var all = _bandAlbumRepository.GetAllAlbums();
