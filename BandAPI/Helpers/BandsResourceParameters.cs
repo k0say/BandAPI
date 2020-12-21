@@ -20,5 +20,7 @@ namespace BandAPI.Helpers
             get => _pageSize;
             set => _pageSize = ((value > maxPageSize) || (value <= 0)) ? maxPageSize : value;
         }
+
+        public string OrderBy { get; set; } = "Name";
     }
 }

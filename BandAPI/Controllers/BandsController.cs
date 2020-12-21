@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using BandAPI.Models;
 using BandAPI.Helpers;
 using AutoMapper;
+using System.Text.Json;
 
 namespace BandAPI.Controllers
 {
@@ -20,17 +21,33 @@ namespace BandAPI.Controllers
             _bandAlbumRepository = bandAlbumRepository ?? throw new ArgumentNullException(nameof(bandAlbumRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        
+
         [HttpGet(Name = "GetBands")]
         //HEAD -> come get ma non ritorna un response body (utiler per sapere se una risposta è stata modifica, o valida)
         [HttpHead]
         public ActionResult<IEnumerable<BandDto>> GetBands([FromQuery] BandsResourceParameters bandsResourceParameters)
         {
             var bandsFromRepo = _bandAlbumRepository.GetBands(bandsResourceParameters);
+
+            var previousPageLink = bandsFromRepo.HasPrevious ? CreateBandsUri(bandsResourceParameters, UriType.PreviousPage) : null;
+
+            var nextPageLink = bandsFromRepo.HasNext ? CreateBandsUri(bandsResourceParameters, UriType.NextPage) : null;
+
+            var metaData = new
+            {
+                totalCount = bandsFromRepo.TotalCount,
+                pageSize = bandsFromRepo.PageSize,
+                currentPage = bandsFromRepo.CurrentPage,
+                totalPages = bandsFromRepo.TotalPages,
+                previousPageLink,
+                nextPageLink
+            };
+            Response.Headers.Add("Pagination", JsonSerializer.Serialize(metaData));
+
             return Ok(_mapper.Map<IEnumerable<BandDto>>(bandsFromRepo));
         }
-        
-        [HttpGet("{bandId}", Name="GetBand")]
+
+        [HttpGet("{bandId}", Name = "GetBand")]
         public IActionResult GetBand(Guid bandId)
         {
             var bandFromRepo = _bandAlbumRepository.GetBand(bandId);
@@ -80,12 +97,12 @@ namespace BandAPI.Controllers
             {
                 case UriType.PreviousPage:
                     return Url.Link("GetBands", new
-                        {
-                            pageNumber = bandsResourceParameters.PageNumber - 1,
-                            pageSize = bandsResourceParameters.PageSize,
-                            mainGenre = bandsResourceParameters.MainGenre,
-                            searchQuery = bandsResourceParameters.SearchQuery
-                        });
+                    {
+                        pageNumber = bandsResourceParameters.PageNumber - 1,
+                        pageSize = bandsResourceParameters.PageSize,
+                        mainGenre = bandsResourceParameters.MainGenre,
+                        searchQuery = bandsResourceParameters.SearchQuery
+                    });
                 case UriType.NextPage:
                     return Url.Link("GetBands", new
                     {
