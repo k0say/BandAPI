@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,8 +34,16 @@ namespace BandAPI
             {
                 //consente solo json
                 setupAction.ReturnHttpNotAcceptable = true;
-                //così aggiungo anche il supporto per l'xml
-            }).AddXmlDataContractSerializerFormatters();
+            })
+            //lo metto prima, così abbiamo formato JSON come default
+            .AddNewtonsoftJson(setupAction =>
+            {
+                //necessario per utilizzare PATCH
+                setupAction.SerializerSettings.ContractResolver =
+                new CamelCasePropertyNamesContractResolver();
+            })
+            //così aggiungo anche il supporto per l'xml
+            .AddXmlDataContractSerializerFormatters();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
