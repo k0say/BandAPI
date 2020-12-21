@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BandAPI.Models;
 using BandAPI.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -82,9 +83,31 @@ namespace BandAPI.Controllers
             return NoContent();
         }
 
+        //JsonPatchDocument è la libreria da utilizzare per utilizzare PATCH
+        [HttpPatch("{albumId}")]
+        public ActionResult PartiallyUpdateAlbumForBand(Guid bandId, Guid albumId, [FromBody] JsonPatchDocument<AlbumForUpdatingDto> patchDocument)
+        {
+            if (!_bandAlbumRepository.BandExists(bandId))
+                return NotFound();
+
+            var albumFromRepo = _bandAlbumRepository.GetAlbum(bandId, albumId);
+            if (albumFromRepo == null)
+                return NotFound();
+
+            //performiamo il PATCH sul DTO piuttosto che sull'entità come per PUT
+            var albumToPatch = _mapper.Map<AlbumForUpdatingDto>(albumFromRepo);
+            patchDocument.ApplyTo(albumToPatch);
+
+            _mapper.Map(albumToPatch, albumFromRepo);
+            _bandAlbumRepository.UpdateAlbum(albumFromRepo);
+            _bandAlbumRepository.Save();
+
+            return NoContent();
+        }
 
 
-        [HttpGet("allalbums")]
+        [HttpGet("/allalbums")]
+        //[Route("/allalbums")]
         public ActionResult<IEnumerable<AlbumsDto>> GetAll()
         {
             var all = _bandAlbumRepository.GetAllAlbums();
