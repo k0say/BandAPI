@@ -21,7 +21,7 @@ namespace BandAPI.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         
-        [HttpGet]
+        [HttpGet(Name = "GetBands")]
         //HEAD -> come get ma non ritorna un response body (utiler per sapere se una risposta è stata modifica, o valida)
         [HttpHead]
         public ActionResult<IEnumerable<BandDto>> GetBands([FromQuery] BandsResourceParameters bandsResourceParameters)
@@ -72,6 +72,37 @@ namespace BandAPI.Controllers
             _bandAlbumRepository.Save();
 
             return NoContent();
+        }
+
+        private string CreateBandsUri(BandsResourceParameters bandsResourceParameters, UriType uriType)
+        {
+            switch (uriType)
+            {
+                case UriType.PreviousPage:
+                    return Url.Link("GetBands", new
+                        {
+                            pageNumber = bandsResourceParameters.PageNumber - 1,
+                            pageSize = bandsResourceParameters.PageSize,
+                            mainGenre = bandsResourceParameters.MainGenre,
+                            searchQuery = bandsResourceParameters.SearchQuery
+                        });
+                case UriType.NextPage:
+                    return Url.Link("GetBands", new
+                    {
+                        pageNumber = bandsResourceParameters.PageNumber + 1,
+                        pageSize = bandsResourceParameters.PageSize,
+                        mainGenre = bandsResourceParameters.MainGenre,
+                        searchQuery = bandsResourceParameters.SearchQuery
+                    });
+                default:
+                    return Url.Link("GetBands", new
+                    {
+                        pageNumber = bandsResourceParameters.PageNumber,
+                        pageSize = bandsResourceParameters.PageSize,
+                        mainGenre = bandsResourceParameters.MainGenre,
+                        searchQuery = bandsResourceParameters.SearchQuery
+                    });
+            }
         }
 
     }
