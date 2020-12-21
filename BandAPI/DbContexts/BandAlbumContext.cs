@@ -18,113 +18,77 @@ namespace BandAPI.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //var testData = Band.FakerData.Generate(10).ToList();
-            modelBuilder.Entity<Band>().HasData(
-            new Band()
+            modelBuilder.Entity<Band>().HasData(new Band()
             {
-                Id = Guid.Parse("0F3E64F2-0BD4-9431-6024-8ABD724F5377"),
-                Name = "Hunter Rivera",
+                Id = Guid.Parse("6b1eea43-5597-45a6-bdea-e68c60564247"),
+                Name = "Metallica",
                 Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Farley, Aspen V.",
+                MainGenre = "Heavy Metal"
             },
             new Band
             {
-                Id = Guid.Parse("F5E1191D-B972-B37D-64B2-6E93D27DA92E"),
-                Name = "Burton Chambers",
-                Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Huff, Darius M.",
+                Id = Guid.Parse("a052a63d-fa53-44d5-a197-83089818a676"),
+                Name = "Guns N Roses",
+                Founded = new DateTime(1985, 2, 1),
+                MainGenre = "Rock"
             },
             new Band
             {
-                Id = Guid.Parse("22C52AD2-AE11-036F-5D51-83369AA777BB"),
-                Name = "Talon Bailey",
-                Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Whitney, Jena O.",
+                Id = Guid.Parse("cb554ed6-8fa7-4b8d-8d90-55cc6a3e0074"),
+                Name = "ABBA",
+                Founded = new DateTime(1965, 7, 1),
+                MainGenre = "Disco"
             },
             new Band
             {
-                Id = Guid.Parse("0E66EA98-0BC8-214F-F2B4-4A36A4D5329F"),
-                Name = "Gage Gross",
-                Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Daniels, Melvin Y.",
+                Id = Guid.Parse("8e2f0a16-4c09-44c7-ba56-8dc62dfd792d"),
+                Name = "Oasis",
+                Founded = new DateTime(1991, 12, 1),
+                MainGenre = "Alternative"
             },
             new Band
             {
-                Id = Guid.Parse("9F5D793B-1EB9-BACA-281C-50AF5E5CE583"),
-                Name = "Lars Patel",
-                Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Huber, Addison M.",
-            },
-            new Band
-            {
-                Id = Guid.Parse("AD706A51-ACB1-006E-26A3-6345F47A66DF"),
-                Name = "Ethan Bryan",
-                Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Russo, Cruz Q.",
-            },
-            new Band
-            {
-                Id = Guid.Parse("B5B8C87F-EC11-2F49-C9ED-6A916F7DA923"),
-                Name = "Cole Pickett",
-                Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Elliott, Harrison R.",
-            },
-            new Band
-            {
-                Id = Guid.Parse("7697D932-E00D-F9E5-ECC0-013E68259504"),
-                Name = "Abdul Mclean",
-                Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Cleveland, Rooney F.",
-            },
-            new Band
-            {
-                Id = Guid.Parse("A695C383-F13C-4013-3D54-724BF36283F4"),
-                Name = "Fletcher England",
-                Founded = new DateTime(1980, 1, 1),
-                MainGenre = "Bridges, Mark D.",
+                Id = Guid.Parse("cab51058-0996-4221-ba63-b841004e89dd"),
+                Name = "A-ha",
+                Founded = new DateTime(1981, 6, 1),
+                MainGenre = "Pop"
             });
 
             modelBuilder.Entity<Album>().HasData(
                 new Album
                 {
-                    Id = Guid.Parse("ade75b2b-78f9-4039-b07f-ee7dfb98d52d"),
-                    Title = "Burton Chambers",
-                    Description = "Awesome debut album AHAHHSHD",
-                    BandId = Guid.Parse("A695C383-F13C-4013-3D54-724BF36283F4"),
+                    Id = Guid.Parse("dc4ccabe-29aa-42c4-9f80-18caea50adf5"),
+                    Title = "Master Of Puppets",
+                    Description = "One of the best heavy metal albums ever",
+                    BandId = Guid.Parse("6b1eea43-5597-45a6-bdea-e68c60564247")
                 },
                 new Album
                 {
-                    Id = Guid.Parse("d03563f8-9009-409e-98dc-2b68394353bc"),
-                    Title = "Burton Chambers",
-                    Description = "Awesome debut album AHAHHSHD",
-                    BandId = Guid.Parse("A695C383-F13C-4013-3D54-724BF36283F4"),
+                    Id = Guid.Parse("e5b6e8bf-5956-4329-a1b3-b1d48eea33ad"),
+                    Title = "Appetite for Destruction",
+                    Description = "Amazing Rock album with raw sound",
+                    BandId = Guid.Parse("a052a63d-fa53-44d5-a197-83089818a676")
                 },
                 new Album
                 {
-                    Id = Guid.Parse("5ce28d03-3254-4fdb-bbd7-414825b99fe4"),
-                    Title = "Burton Chambers",
-                    Description = "Awesome debut album AHAHHSHD",
-                    BandId = Guid.Parse("A695C383-F13C-4013-3D54-724BF36283F4"),
+                    Id = Guid.Parse("380c545c-9665-4043-baf2-34a3edefd373"),
+                    Title = "Waterloo",
+                    Description = "Very groovy album",
+                    BandId = Guid.Parse("cb554ed6-8fa7-4b8d-8d90-55cc6a3e0074")
                 },
                 new Album
                 {
-                    Id = Guid.Parse("71d4dcec-b4fe-4600-92ed-cc8fa6145645"),
-                    Title = "Burton Chambers",
-                    Description = "Awesome debut album AHAHHSHD",
-                    BandId = Guid.Parse("A695C383-F13C-4013-3D54-724BF36283F4"),
+                    Id = Guid.Parse("0e9a4ab5-4ae6-4ca3-ae7b-5f813e022527"),
+                    Title = "Be Here Now",
+                    Description = "Arguably one of the best albums by Oasis",
+                    BandId = Guid.Parse("8e2f0a16-4c09-44c7-ba56-8dc62dfd792d")
                 },
                 new Album
                 {
-                    Id = Guid.Parse("AD706A51-ACB1-006E-26A3-6345F47A66DF"),
-                    Title = "Burton Chambers",
-                    Description = "Awesome debut album AHAHHSHD",
-                    BandId = Guid.Parse("A695C383-F13C-4013-3D54-724BF36283F4"),
-                },
-                new Album
-                {
-                    Id = Guid.Parse("05b623b5-5b97-49d3-9808-5ee0af52c4aa"),
-                    Title = "Burton Chambers",
-                    Description = "Awesome debut album AHAHHSHD",
-                    BandId = Guid.Parse("A695C383-F13C-4013-3D54-724BF36283F4"),
+                    Id = Guid.Parse("8d2744ff-1134-4f36-a300-043febdc64b8"),
+                    Title = "Hunting Hight and Low",
+                    Description = "Awesome Debut album by A-Ha",
+                    BandId = Guid.Parse("cab51058-0996-4221-ba63-b841004e89dd")
                 });
             base.OnModelCreating(modelBuilder);
         }
