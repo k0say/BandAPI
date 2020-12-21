@@ -2,8 +2,6 @@
 using BandAPI.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BandAPI.Models;
 using BandAPI.Helpers;
 using AutoMapper;
@@ -60,6 +58,20 @@ namespace BandAPI.Controllers
         {
             Response.Headers.Add("Allow", "GET, POST, DELETE, HEAD, OPTIONS");
             return Ok();
+        }
+
+        [HttpDelete("{bandId}")]
+        public ActionResult DeleteBand(Guid bandId)
+        {
+            var bandFromRepo = _bandAlbumRepository.GetBand(bandId);
+
+            if (bandFromRepo == null)
+                return NotFound();
+            //rimuove la band e i child (albums)
+            _bandAlbumRepository.DeleteBand(bandFromRepo);
+            _bandAlbumRepository.Save();
+
+            return NoContent();
         }
 
     }
