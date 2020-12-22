@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BandAPI.Services
 {
-    public class PropertyMapping<Tsource, TDestination>
+    public class PropertyMapping<Tsource, TDestination> : IPropertyMappingMarker
     {
         public Dictionary<string,PropertyMappingValue> MappingDictionary { get; set; }
         public PropertyMapping(Dictionary<string,PropertyMappingValue> mappingDictionary)
