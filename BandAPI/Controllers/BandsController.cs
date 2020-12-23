@@ -28,7 +28,7 @@ namespace BandAPI.Controllers
         [HttpGet(Name = "GetBands")]
         //HEAD -> come get ma non ritorna un response body (utiler per sapere se una risposta è stata modifica, o valida)
         [HttpHead]
-        public ActionResult<IEnumerable<BandDto>> GetBands([FromQuery] BandsResourceParameters bandsResourceParameters)
+        public IActionResult GetBands([FromQuery] BandsResourceParameters bandsResourceParameters)
         {
             if (!_propertyMappingService.ValidMappingExists<BandDto, Band>(bandsResourceParameters.OrderBy))
                 return BadRequest();
@@ -50,7 +50,7 @@ namespace BandAPI.Controllers
             };
             Response.Headers.Add("Pagination", JsonSerializer.Serialize(metaData));
 
-            return Ok(_mapper.Map<IEnumerable<BandDto>>(bandsFromRepo));
+            return Ok(_mapper.Map<IEnumerable<BandDto>>(bandsFromRepo).ShapeData(bandsResourceParameters.Fields));
         }
 
         [HttpGet("{bandId}", Name = "GetBand")]
@@ -67,7 +67,7 @@ namespace BandAPI.Controllers
         public ActionResult<BandDto> CreateBand([FromBody] BandForCreatingDto band) //FromBody quando è tipo complesso
         {
             //ritorna BadRequest se è null
-            var bandEntity = _mapper.Map<Entities.Band>(band);
+            var bandEntity = _mapper.Map<Band>(band);
             _bandAlbumRepository.AddBand(bandEntity);
             _bandAlbumRepository.Save();
 
@@ -104,6 +104,7 @@ namespace BandAPI.Controllers
                 case UriType.PreviousPage:
                     return Url.Link("GetBands", new
                     {
+                        fields = bandsResourceParameters.Fields,
                         orderBy = bandsResourceParameters.OrderBy,
                         pageNumber = bandsResourceParameters.PageNumber - 1,
                         pageSize = bandsResourceParameters.PageSize,
@@ -113,6 +114,7 @@ namespace BandAPI.Controllers
                 case UriType.NextPage:
                     return Url.Link("GetBands", new
                     {
+                        fields = bandsResourceParameters.Fields,
                         orderBy = bandsResourceParameters.OrderBy,
                         pageNumber = bandsResourceParameters.PageNumber + 1,
                         pageSize = bandsResourceParameters.PageSize,
@@ -122,6 +124,7 @@ namespace BandAPI.Controllers
                 default:
                     return Url.Link("GetBands", new
                     {
+                        fields = bandsResourceParameters.Fields,
                         orderBy = bandsResourceParameters.OrderBy,
                         pageNumber = bandsResourceParameters.PageNumber,
                         pageSize = bandsResourceParameters.PageSize,
