@@ -17,12 +17,14 @@ namespace BandAPI.Controllers
         private readonly IBandAlbumRepository _bandAlbumRepository;
         private readonly IMapper _mapper;
         private readonly IPropertyMappingService _propertyMappingService;
+        private readonly IPropertyValidationService _propertyValidationService;
 
-        public BandsController(IBandAlbumRepository bandAlbumRepository, IMapper mapper, IPropertyMappingService propertyMappingService)
+        public BandsController(IBandAlbumRepository bandAlbumRepository, IMapper mapper, IPropertyMappingService propertyMappingService, IPropertyValidationService propertyValidationService)
         {
             _bandAlbumRepository = bandAlbumRepository ?? throw new ArgumentNullException(nameof(bandAlbumRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _propertyMappingService = propertyMappingService ?? throw new ArgumentNullException(nameof(propertyMappingService));
+            _propertyValidationService = propertyValidationService ?? throw new ArgumentNullException(nameof(propertyValidationService));
         }
 
         [HttpGet(Name = "GetBands")]
@@ -31,6 +33,9 @@ namespace BandAPI.Controllers
         public IActionResult GetBands([FromQuery] BandsResourceParameters bandsResourceParameters)
         {
             if (!_propertyMappingService.ValidMappingExists<BandDto, Band>(bandsResourceParameters.OrderBy))
+                return BadRequest();
+
+            if (!_propertyValidationService.HasValidProperties<BandDto>(bandsResourceParameters.Fields))
                 return BadRequest();
 
             var bandsFromRepo = _bandAlbumRepository.GetBands(bandsResourceParameters);
@@ -54,13 +59,17 @@ namespace BandAPI.Controllers
         }
 
         [HttpGet("{bandId}", Name = "GetBand")]
-        public IActionResult GetBand(Guid bandId)
+        public IActionResult GetBand(Guid bandId, string fields)
         {
+            if (!_propertyValidationService.HasValidProperties<BandDto>(fields))
+                return BadRequest();
+
             var bandFromRepo = _bandAlbumRepository.GetBand(bandId);
+
             if (bandFromRepo == null)
                 return NotFound();
 
-            return Ok(bandFromRepo);
+            return Ok(_mapper.Map<BandDto>(bandFromRepo).ShapeData(fields));
         }
 
         [HttpPost]
