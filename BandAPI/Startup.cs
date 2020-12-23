@@ -30,10 +30,14 @@ namespace BandAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCaching();
             services.AddControllers(setupAction =>
             {
                 //consente solo json
                 setupAction.ReturnHttpNotAcceptable = true;
+                //specifichiamo la chiave e il valore del cacheProfile
+                setupAction.CacheProfiles.Add("90SecondsCacheProfile",
+                    new CacheProfile { Duration = 90 });
             })
             //lo metto prima, così abbiamo formato JSON come default
             .AddNewtonsoftJson(setupAction =>
@@ -79,6 +83,8 @@ namespace BandAPI
                     });
                 });
             }
+
+            app.UseResponseCaching();
 
             app.UseRouting();
 
